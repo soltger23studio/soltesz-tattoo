@@ -305,7 +305,7 @@ function PanelKapcsolat() {
         Lépj<br />kapcsolatba
       </h2>
       {[
-        { p: "Instagram", h: "@jozsef.soltesz",   d: "Portfólió & üzenetfoglalás",    url: "https://www.instagram.com/jozsef.soltesz" },
+        { p: "Instagram", h: "@jozsef.soltesz_tattoo", d: "Portfólió & üzenetfoglalás", url: "https://www.instagram.com/jozsef.soltesz_tattoo/" },
         { p: "TikTok",    h: "@soltesz.j_tattoo", d: "Videók, munkák menet közben",   url: "https://www.tiktok.com/@soltesz.j_tattoo" },
         { p: "Helyszín",  h: "Nyíregyháza",        d: "Magyarország, Sz-Sz-Bereg megye", url: "https://maps.google.com/?q=Nyíregyháza" },
       ].map(c => (
@@ -320,7 +320,7 @@ function PanelKapcsolat() {
       ))}
       <div style={{ marginTop: "20px", background: RED_LOW, border: `1px solid rgba(210,20,20,0.25)`, borderRadius: "10px", padding: "20px", textAlign: "center" }}>
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px", marginBottom: "14px", lineHeight: 1.6 }}>Kész vagy az egyedi tetoválásodra?</p>
-        <a href="https://www.instagram.com/jozsef.soltesz" target="_blank" rel="noopener noreferrer"
+        <a href="https://www.instagram.com/jozsef.soltesz_tattoo/" target="_blank" rel="noopener noreferrer"
           style={{ display: "inline-block", background: RED, color: "#fff", borderRadius: "6px", padding: "11px 22px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", textDecoration: "none", fontFamily: FONT }}>
           Írj üzenetet
         </a>
