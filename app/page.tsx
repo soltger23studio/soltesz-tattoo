@@ -1,5 +1,5 @@
-import OrbitalPage from "@/components/OrbitalPage";
+import ResponsivePage from "@/components/ResponsivePage";
 
 export default function Home() {
-  return <OrbitalPage />;
+  return <ResponsivePage />;
 }
