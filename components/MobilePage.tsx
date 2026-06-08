@@ -61,21 +61,87 @@ const TABS = [
 
 /* ══════════════════════ PANEL CONTENT ══════════════════════ */
 
+function MobileVideoSection() {
+  const vidRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const v = vidRef.current;
+    if (!v) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { v.play().then(() => setPlaying(true)).catch(() => {}); }
+      else { v.pause(); setPlaying(false); }
+    }, { threshold: 0.2 });
+    obs.observe(v);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div style={{ marginBottom: "28px" }}>
+      {/* Label row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ width: "24px", height: "1px", background: "rgba(210,20,20,0.6)" }} />
+          <span style={{ fontSize: "9px", letterSpacing: "0.32em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", fontFamily: FINTER }}>Munkamenet</span>
+        </div>
+        {playing && (
+          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: RED, animation: "pulseDot 1.2s ease-in-out infinite" }} />
+            <span style={{ fontSize: "8px", letterSpacing: "0.18em", color: "rgba(255,255,255,0.4)", fontFamily: FINTER }}>LIVE</span>
+          </div>
+        )}
+      </div>
+
+      {/* Video frame */}
+      <div style={{ position: "relative", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(210,20,20,0.3)", boxShadow: "0 0 0 1px rgba(210,20,20,0.08), 0 24px 60px rgba(0,0,0,0.7), 0 0 50px rgba(210,20,20,0.1)" }}>
+
+        {/* Ambient glow */}
+        <div style={{ position: "absolute", inset: "-20px", background: "radial-gradient(ellipse at center, rgba(210,20,20,0.15) 0%, transparent 65%)", borderRadius: "30px", pointerEvents: "none", zIndex: 0 }} />
+
+        {/* Corner accents */}
+        <div style={{ position:"absolute",top:"12px",left:"12px",width:"16px",height:"16px",borderTop:"1.5px solid rgba(210,20,20,0.9)",borderLeft:"1.5px solid rgba(210,20,20,0.9)",zIndex:4,borderRadius:"2px 0 0 0" }} />
+        <div style={{ position:"absolute",top:"12px",right:"12px",width:"16px",height:"16px",borderTop:"1.5px solid rgba(210,20,20,0.9)",borderRight:"1.5px solid rgba(210,20,20,0.9)",zIndex:4,borderRadius:"0 2px 0 0" }} />
+        <div style={{ position:"absolute",bottom:"12px",left:"12px",width:"16px",height:"16px",borderBottom:"1.5px solid rgba(210,20,20,0.9)",borderLeft:"1.5px solid rgba(210,20,20,0.9)",zIndex:4,borderRadius:"0 0 0 2px" }} />
+        <div style={{ position:"absolute",bottom:"12px",right:"12px",width:"16px",height:"16px",borderBottom:"1.5px solid rgba(210,20,20,0.9)",borderRight:"1.5px solid rgba(210,20,20,0.9)",zIndex:4,borderRadius:"0 0 2px 0" }} />
+
+        {/* Video */}
+        <div style={{ position: "relative", aspectRatio: "9/16", background: "#000" }}>
+          <video
+            ref={vidRef}
+            src="/process.mp4"
+            muted
+            loop
+            playsInline
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
+          {/* Top gradient */}
+          <div style={{ position:"absolute",top:0,left:0,right:0,height:"20%",background:"linear-gradient(to bottom,rgba(0,0,0,0.7),transparent)",pointerEvents:"none",zIndex:2 }} />
+          {/* Bottom gradient + text */}
+          <div style={{ position:"absolute",bottom:0,left:0,right:0,height:"42%",background:"linear-gradient(to top,rgba(0,0,0,0.95),transparent)",pointerEvents:"none",zIndex:2 }} />
+          <div style={{ position:"absolute",bottom:"20px",left:"20px",right:"20px",zIndex:3 }}>
+            <p style={{ fontFamily:FBEBAS,fontSize:"32px",letterSpacing:"0.06em",color:"#fff",lineHeight:1.0,margin:0,textShadow:"0 2px 24px rgba(0,0,0,0.9)" }}>
+              TRUST THE<br /><span style={{ color:RED }}>PROCESS</span>
+            </p>
+            <p style={{ fontSize:"10px",color:"rgba(255,255,255,0.35)",marginTop:"6px",fontFamily:FINTER,letterSpacing:"0.1em" }}>
+              Tervezéstől a tűig
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PanelRolam() {
   return (
     <div style={{ fontFamily: FINTER }}>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "24px" }}>
-        <div>
-          <p style={{ fontSize: "11px", letterSpacing: "0.28em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: "6px" }}>01 — Rólam</p>
-          <h2 style={{ fontSize: "38px", fontWeight: 400, color: "#fff", lineHeight: 1.0, letterSpacing: "0.04em", fontFamily: FBEBAS }}>
-            A tinta<br /><span style={{ color: RED }}>mögött</span>
-          </h2>
-        </div>
-        {/* Avatar placeholder */}
-        <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(210,20,20,0.1)", border: "1px solid rgba(210,20,20,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <span style={{ fontFamily: FBEBAS, fontSize: "22px", color: RED, letterSpacing: "0.1em" }}>SJ</span>
-        </div>
-      </div>
+      <p style={{ fontSize: "11px", letterSpacing: "0.28em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: "6px" }}>01 — Rólam</p>
+      <h2 style={{ fontSize: "38px", fontWeight: 400, color: "#fff", lineHeight: 1.0, letterSpacing: "0.04em", fontFamily: FBEBAS, marginBottom: "22px" }}>
+        A tinta<br /><span style={{ color: RED }}>mögött</span>
+      </h2>
+
+      {/* ── Premium video section ── */}
+      <MobileVideoSection />
 
       <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, marginBottom: "10px" }}>
         Soltész József vagyok, Nyíregyháza tetoválóművésze. Anime, japán és custom design stílusban alkotok egyedi, személyre szabott tetoválásokat.
@@ -616,6 +682,10 @@ export default function MobilePage() {
         @keyframes pulseGlow {
           0%, 100% { opacity: 0.5; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.08); }
+        }
+        @keyframes pulseDot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.3; transform: scale(0.7); }
         }
         * { -webkit-tap-highlight-color: transparent; }
         input, textarea, select { -webkit-appearance: none; }

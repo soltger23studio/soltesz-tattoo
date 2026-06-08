@@ -45,13 +45,89 @@ const inp: React.CSSProperties = {
 
 /* ══════════════════════ PANEL CONTENT ══════════════════════ */
 
+function VideoSection() {
+  const [playing, setPlaying] = useState(false);
+  const vidRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = vidRef.current;
+    if (!v) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { v.play().then(() => setPlaying(true)).catch(() => {}); }
+      else { v.pause(); setPlaying(false); }
+    }, { threshold: 0.3 });
+    obs.observe(v);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div style={{ position: "relative", marginBottom: "28px" }}>
+      {/* Ambient glow behind the video */}
+      <div style={{ position: "absolute", inset: "-12px", background: "radial-gradient(ellipse at center, rgba(210,20,20,0.18) 0%, transparent 70%)", borderRadius: "20px", pointerEvents: "none" }} />
+
+      {/* Outer frame */}
+      <div style={{ position: "relative", borderRadius: "14px", overflow: "hidden", border: "1px solid rgba(210,20,20,0.35)", boxShadow: "0 0 0 1px rgba(210,20,20,0.1), 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(210,20,20,0.12)" }}>
+
+        {/* Corner accents */}
+        {[{t:"0",l:"0",bt:"none",br:"none"},{t:"0",r:"0",bt:"none",bl:"none"},{b:"0",l:"0",bb:"none",br:"none"},{b:"0",r:"0",bb:"none",bl:"none"}].map((pos,i) => (
+          <div key={i} style={{ position:"absolute", width:"14px", height:"14px", zIndex:4, ...Object.fromEntries(Object.entries(pos).map(([k,v]) => [k==="t"?"top":k==="b"?"bottom":k==="l"?"left":"right", v])), borderTop: i<2?"1px solid rgba(210,20,20,0.9)":undefined, borderBottom: i>=2?"1px solid rgba(210,20,20,0.9)":undefined, borderLeft: i%2===0?"1px solid rgba(210,20,20,0.9)":undefined, borderRight: i%2===1?"1px solid rgba(210,20,20,0.9)":undefined }} />
+        ))}
+
+        {/* Video */}
+        <div style={{ position: "relative", aspectRatio: "9/16", background: "#000", overflow: "hidden" }}>
+          <video
+            ref={vidRef}
+            src="/process.mp4"
+            muted
+            loop
+            playsInline
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
+
+          {/* Cinematic top/bottom bars */}
+          <div style={{ position:"absolute",top:0,left:0,right:0,height:"18%",background:"linear-gradient(to bottom,rgba(0,0,0,0.75),transparent)",pointerEvents:"none",zIndex:2 }} />
+          <div style={{ position:"absolute",bottom:0,left:0,right:0,height:"35%",background:"linear-gradient(to top,rgba(0,0,0,0.92),transparent)",pointerEvents:"none",zIndex:2 }} />
+
+          {/* "TRUST THE PROCESS" overlay */}
+          <div style={{ position:"absolute",bottom:"18px",left:"16px",right:"16px",zIndex:3 }}>
+            <div style={{ display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px" }}>
+              <div style={{ width:"20px",height:"1px",background:"rgba(210,20,20,0.7)" }} />
+              <span style={{ fontSize:"9px",letterSpacing:"0.3em",color:"rgba(255,255,255,0.4)",textTransform:"uppercase",fontFamily:FONT }}>A folyamat</span>
+            </div>
+            <p style={{ fontFamily:FBEBAS,fontSize:"26px",letterSpacing:"0.08em",color:"#fff",lineHeight:1.0,textShadow:"0 2px 20px rgba(0,0,0,0.9)" }}>
+              TRUST THE<br /><span style={{ color:RED }}>PROCESS</span>
+            </p>
+          </div>
+
+          {/* Playing indicator */}
+          {playing && (
+            <div style={{ position:"absolute",top:"12px",right:"12px",zIndex:3,display:"flex",alignItems:"center",gap:"5px" }}>
+              <div style={{ width:"6px",height:"6px",borderRadius:"50%",background:RED,animation:"pulseDot 1.2s ease-in-out infinite" }} />
+              <span style={{ fontSize:"8px",letterSpacing:"0.2em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",fontFamily:FONT }}>LIVE</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Caption below */}
+      <p style={{ fontSize:"10px",color:"rgba(255,255,255,0.2)",textAlign:"center",marginTop:"10px",letterSpacing:"0.15em",fontFamily:FONT }}>
+        @dr.j_tattoo · Munkamenet dokumentáció
+      </p>
+    </div>
+  );
+}
+
 function PanelRolam() {
   return (
     <div style={{ fontFamily: FONT }}>
-      <p style={{ fontSize: "10px", letterSpacing: "0.3em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: "18px" }}>01 — Rólam</p>
-      <h2 style={{ fontSize: "36px", fontWeight: 400, color: "#fff", lineHeight: 1.05, marginBottom: "16px", letterSpacing: "0.04em", fontFamily: FBEBAS }}>
+      <p style={{ fontSize: "10px", letterSpacing: "0.3em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: "12px" }}>01 — Rólam</p>
+      <h2 style={{ fontSize: "36px", fontWeight: 400, color: "#fff", lineHeight: 1.05, marginBottom: "20px", letterSpacing: "0.04em", fontFamily: FBEBAS }}>
         A tinta mögötti<br /><span style={{ color: RED }}>ember</span>
       </h2>
+
+      {/* ── Premium video section ── */}
+      <VideoSection />
+
       <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.4)", lineHeight: 1.8, marginBottom: "12px" }}>
         Soltész József vagyok, Nyíregyháza tetoválóművésze. Anime, japán és custom design stílusban alkotok egyedi, személyre szabott tetoválásokat.
       </p>
@@ -453,6 +529,10 @@ export default function OrbitalPage() {
         @keyframes pulseGlow {
           0%, 100% { opacity: 0.5; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.07); }
+        }
+        @keyframes pulseDot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.3; transform: scale(0.7); }
         }
         input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.18); }
         select option { background: #0a0202; color: #fff; }
