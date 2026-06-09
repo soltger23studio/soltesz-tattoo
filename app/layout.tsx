@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="hu" className={`${bebasNeue.variable} ${inter.variable}`} style={{ height: "100%", overflow: "hidden" }}>
-      <body style={{ height: "100%", overflow: "hidden" }}>{children}</body>
+      <body style={{ height: "100%", overflow: "hidden" }}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
